@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>jsPDF Image to PDF From file</title>
+</head>
+<body>
+	<input type="file" name="" id="imageFile">
+	<canvas  id="canvas" style="width: 400px; height: 400px;"></canvas>
+	<button id="button">Download PDF</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.0/html2canvas.min.js"></script>
+<script type="text/javascript">
+	var imageFile = document.getElementById("imageFile")
+	var canvas = document.getElementById("canvas")
+	var button = document.getElementById("button")
+	button.onclick = handleImageToPdf
+	function handleImageToPdf(){
+		html2canvas(canvas, {
+			onrendered: function(canvas){
+				var imgData = canvas.toDataURL('image/png');
+				var doc = new jsPDF('p', 'mm');
+				doc.addImage(imgData,'PNG', 10, 10);
+				doc.save('sologyan.pdf');
+			}
+		});
+	}
+	var ctx = canvas.getContext('2d')
+	imageFile.addEventListener("change", handleImage, false)
+	function handleImage(e){
+		console.log(e)
+		var reader = new FileReader 
+		// Listen for reader event
+		reader.onload = function(event){
+			var image = new Image()
+			image.onload = function(){
+				canvas.width = image.width
+				canvas.height = image.height
+				ctx.drawImage(image,0,0) 
+			}
+			image.src = event.target.result
+		}
+		reader.readAsDataURL(e.target.files[0]);
+
+	}
+</script>
+</body>
+</html>
